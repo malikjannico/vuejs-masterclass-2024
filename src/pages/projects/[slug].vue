@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useErrorStore } from '@/stores/error'
 import { projectQuery, type Project } from '@/utils/supaQueries'
 
 const route = useRoute('/projects/[slug]')
@@ -13,8 +14,8 @@ watch(
 )
 
 const getProjects = async () => {
-  const { data, error } = await projectQuery(route.params.slug)
-  if (error) console.log(error)
+  const { data, error, status } = await projectQuery(route.params.slug)
+  if (error) useErrorStore().setError({ error, customCode: status })
   project.value = data
 }
 await getProjects()
@@ -34,7 +35,7 @@ await getProjects()
     </TableRow>
     <TableRow>
       <TableHead> Status </TableHead>
-      <TableCell>In progress</TableCell>
+      <TableCell>{{ project.status }}</TableCell>
     </TableRow>
     <TableRow>
       <TableHead> Collaborators </TableHead>
@@ -42,8 +43,8 @@ await getProjects()
         <div class="flex">
           <Avatar
             class="-mr-4 border border-primary hover:scale-110 transition-transform"
-            v-for="n in 5"
-            :key="n"
+            v-for="collaborator in project.collaborators"
+            :key="collaborator"
           >
             <RouterLink class="w-full h-full flex items-center justify-center" to="">
               <AvatarImage src="" alt="" />
@@ -55,7 +56,7 @@ await getProjects()
     </TableRow>
   </Table>
 
-  <section class="mt-10 flex flex-col md:flex-row gap-5 justify-between grow">
+  <section v-if="project" class="mt-10 flex flex-col md:flex-row gap-5 justify-between grow">
     <div class="flex-1">
       <h2>Tasks</h2>
       <div class="table-container">
@@ -68,7 +69,7 @@ await getProjects()
             </TableRow>
           </TableHeader>
           <TableBody>
-            <TableRow v-for="n in 5" :key="n">
+            <TableRow v-for="task in project.tasks" :key="task.id">
               <TableCell> Lorem ipsum dolor sit amet. </TableCell>
               <TableCell> In progress </TableCell>
               <TableCell> 22/08/2024 </TableCell>
@@ -102,8 +103,7 @@ await getProjects()
   </section>
 </template>
 
-<style>
-@reference "@/assets/index.css";
+<style lang="postcss">
 th {
   @apply w-[100px];
 }
