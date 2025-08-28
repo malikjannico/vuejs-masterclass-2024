@@ -34,6 +34,10 @@ export const projectQuery = (slug: string) => {
 }
 export type Project = QueryData<ReturnType<typeof projectQuery>>
 
+export const updateProjectQuery = (updatedProject = {}, id: number) => {
+  return supabase.from('projects').update(updatedProject).eq('id', id)
+}
+
 export const taskQuery = (id: number) => {
   supabase.from('tasks').select(`*, projects(id, name, slug)`).eq('id', id).single()
 }
@@ -42,3 +46,8 @@ export type Task = QueryData<ReturnType<typeof taskQuery>>
 export const profileQuery = ({ column, value }: { column: string; value: string }) => {
   return supabase.from('profiles').select().eq(column, value).single()
 }
+
+export const groupedProfilesQuery = (userIds: string[]) => {
+  return supabase.from('profiles').select('username, avatar_url, id, full_name').in('id', userIds)
+}
+export type Collaborators = QueryData<ReturnType<typeof groupedProfilesQuery>>
