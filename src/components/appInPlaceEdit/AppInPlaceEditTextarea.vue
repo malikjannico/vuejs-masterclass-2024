@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-const inputValue = defineModel<string>({ required: true })
+const inputValue = defineModel<string | null>({ required: true })
 
 const emit = defineEmits(['commit'])
 
