@@ -12,7 +12,9 @@ export const useProjectsStore = defineStore('projects-store', () => {
   const project = ref<Project | null>(null)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const loadProjects = useMemoize(async (key: string) => await projectsQuery)
-  const loadProject = useMemoize(async (slug: string) => await projectQuery(slug))
+  const loadProject = useMemoize(async (slug: string) => {
+    return projectQuery(slug)
+  })
   interface ValidateCacheParams {
     ref: typeof project | typeof projects
     query: typeof projectQuery | typeof projectsQuery

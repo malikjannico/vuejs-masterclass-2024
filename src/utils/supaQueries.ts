@@ -16,7 +16,7 @@ export const projectsQuery = supabase.from('projects').select()
 export type Projects = QueryData<typeof projectsQuery>
 
 export const projectQuery = (slug: string) => {
-  supabase
+  return supabase
     .from('projects')
     .select(
       `

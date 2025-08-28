@@ -12,13 +12,13 @@ const { getProject, updateProject } = projectsLoader
 watch(
   () => project.value?.name,
   () => {
-    usePageStore().pageData.title = `Project: ${project.value?.name || ''}`
+    if (project.value) usePageStore().pageData.title = `Project: ${project.value.name || ''}`
   },
 )
 
 await getProject(slug)
 const { getProfilesByIds } = useCollaborators()
-const collaborators = project.value.collaborators
+const collaborators = project.value?.collaborators
   ? await getProfilesByIds(project.value.collaborators)
   : []
 </script>
