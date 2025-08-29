@@ -39,9 +39,13 @@ export const updateProjectQuery = (updatedProject = {}, id: number) => {
 }
 
 export const taskQuery = (id: number) => {
-  supabase.from('tasks').select(`*, projects(id, name, slug)`).eq('id', id).single()
+  return supabase.from('tasks').select(`*, projects(id, name, slug)`).eq('id', id).single()
 }
 export type Task = QueryData<ReturnType<typeof taskQuery>>
+
+export const updateTaskQuery = (updatedTask = {}, id: number) => {
+  return supabase.from('tasks').update(updatedTask).eq('id', id)
+}
 
 export const profileQuery = ({ column, value }: { column: string; value: string }) => {
   return supabase.from('profiles').select().eq(column, value).single()

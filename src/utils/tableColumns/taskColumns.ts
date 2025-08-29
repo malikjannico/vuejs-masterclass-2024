@@ -1,8 +1,15 @@
 import type { ColumnDef } from '@tanstack/vue-table'
 import type { TasksWithProjects } from '../supaQueries'
 import { RouterLink } from 'vue-router'
+import type { GroupedCollaborators } from '@/types/GroupedCollaborators'
+import Avatar from '@/components/ui/avatar/Avatar.vue'
+import AvatarImage from '@/components/ui/avatar/AvatarImage.vue'
+import AvatarFallback from '@/components/ui/avatar/AvatarFallback.vue'
+import AppInPlaceEditStatus from '@/components/appInPlaceEdit/AppInPlaceEditStatus.vue'
 
-export const columns: ColumnDef<TasksWithProjects[0]>[] = [
+export const columns = (
+  collaborators: Ref<GroupedCollaborators>,
+): ColumnDef<TasksWithProjects[0]>[] => [
   {
     accessorKey: 'name',
     header: () => h('div', { class: 'text-left' }, 'Name'),
@@ -21,7 +28,14 @@ export const columns: ColumnDef<TasksWithProjects[0]>[] = [
     accessorKey: 'status',
     header: () => h('div', { class: 'text-left' }, 'Status'),
     cell: ({ row }) => {
-      return h('div', { class: 'text-left font-medium' }, row.getValue('status'))
+      return h(
+        'div',
+        { class: 'text-left font-medium' },
+        h(AppInPlaceEditStatus, {
+          modelValue: row.original.status,
+          readonly: true,
+        }),
+      )
     },
   },
   {
@@ -53,8 +67,18 @@ export const columns: ColumnDef<TasksWithProjects[0]>[] = [
     cell: ({ row }) => {
       return h(
         'div',
-        { class: 'text-left font-medium' },
-        JSON.stringify(row.getValue('collaborators')),
+        { class: 'text-left font-medium h-20 flex items-center' },
+        collaborators.value[row.original.id]
+          ? collaborators.value[row.original.id].map((collaborator) => {
+              return h(RouterLink, { to: `/users/${collaborator.username}` }, () => {
+                return h(Avatar, { class: 'hover:scale-110 transition-transform' }, () =>
+                  h(AvatarImage, { src: collaborator.avatar_url || '' }),
+                )
+              })
+            })
+          : row.original.collaborators.map(() => {
+              return h(Avatar, { class: 'animate-pulse' }, () => h(AvatarFallback))
+            }),
       )
     },
   },
