@@ -124,7 +124,7 @@ const collaborators = project.value?.collaborators
   </section>
 </template>
 
-<style lang="postcss">
+<style>
 th {
   @apply w-[100px];
 }
