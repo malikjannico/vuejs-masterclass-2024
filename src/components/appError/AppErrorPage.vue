@@ -51,6 +51,7 @@ router.afterEach(() => {
 </template>
 
 <style scoped>
+@reference '../../assets/index.css';
 .error {
   @apply mx-auto flex justify-center items-center flex-1 p-10 text-center -mt-20 min-h-[90vh];
 }

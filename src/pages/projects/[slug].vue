@@ -124,7 +124,8 @@ const collaborators = project.value?.collaborators
   </section>
 </template>
 
-<style>
+<style scoped>
+@reference '../../assets/index.css';
 th {
   @apply w-[100px];
 }
