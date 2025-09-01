@@ -78,7 +78,11 @@
         </TableCell>
       </TableRow>
     </Table>
-    <Button @click="triggerDelete" class="self-end mt-3 w-full max-w-40" variant="destructive">
+    <Button
+      @click="deleteTaskAndRedirect"
+      class="self-end mt-3 w-full max-w-40"
+      variant="destructive"
+    >
       <Transition name="scale" mode="out-in">
         <iconify-icon
           v-if="deleteLoading"
@@ -119,9 +123,9 @@ const deleteLoading = ref(false)
 
 const router = useRouter()
 
-const triggerDelete = async () => {
+const deleteTaskAndRedirect = async () => {
   deleteLoading.value = true
-  await deleteTask()
+  await deleteTask(Number(id))
   deleteLoading.value = false
   router.push({ name: '/tasks/' })
 }

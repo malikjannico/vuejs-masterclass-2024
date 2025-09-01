@@ -30,7 +30,7 @@ export const useTasksStore = defineStore('tasks-store', () => {
         if (JSON.stringify(ref.value) === JSON.stringify(data)) {
           return
         } else {
-          loader.delete(key)
+          loader.delete(Number(key))
           if (!error && data) ref.value = data
         }
       })
